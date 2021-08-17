@@ -13,13 +13,22 @@ const SignupSchema = Yup.object().shape({
 
 interface FromComponentProps {
     addItem: any;
+    updateItem: any;
+    activeItem: Item;
 }
 
-export const FormComponent = ({ addItem }: FromComponentProps) => {
-    const initialValues: Item = { id: '', firstName: '', lastName: '', email: '' }
+export const FormComponent = ({ addItem, updateItem, activeItem }: FromComponentProps) => {
+    var initialValues: Item = { id: '', firstName: '', lastName: '', email: '' };
+    
+    if(activeItem !== undefined) initialValues = activeItem;
 
-    const onSubmit = (values: Item, {setSubmitting}: FormikHelpers<Item>) => {
-        addItem({id: uuidv4(), firstName: values.firstName, lastName: values.lastName, email: values.email});
+    const onSubmit = (values: Item, {setSubmitting, resetForm}: FormikHelpers<Item>) => {
+        if(!activeItem){
+            addItem({id: uuidv4(), firstName: values.firstName, lastName: values.lastName, email: values.email});
+            resetForm({})
+        }else{
+            updateItem({id: values.id, firstName: values.firstName, lastName: values.lastName, email: values.email});
+        }    
     }
 
     return (
@@ -27,12 +36,14 @@ export const FormComponent = ({ addItem }: FromComponentProps) => {
             <Typography variant="h6">Form</Typography>
             <div>
                 <Formik
+                    enableReinitialize
                     initialValues={initialValues}
                     validationSchema={SignupSchema}
                     onSubmit={onSubmit}
                 >
                     {({errors, touched}) => (
                         <Form className="form_body">
+                            <Field id="id" name="id" hidden />
                             <div className="input_section">
                                 <label htmlFor="firstName">First Name</label>
                                 <Field id="firstName" name="firstName" placeholder="John" />
@@ -48,7 +59,11 @@ export const FormComponent = ({ addItem }: FromComponentProps) => {
                                 <Field id="email" name="email" placeholder="john@acme.com" type="email" />
                                 {touched.email && errors.email && <div className="error_field">{errors.email}</div>}
                             </div>
-                            <button type="submit">Submit</button>
+                                <button type="submit">
+                                {activeItem && (<span>Save</span>)}
+                                {!activeItem && (<span>Submit</span>)}
+                                </button>
+                           
                         </Form>
                     )}
                 </Formik>

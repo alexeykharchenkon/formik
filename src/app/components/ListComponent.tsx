@@ -6,9 +6,11 @@ import { ItemComponent } from '@components/ItemComponent';
 interface ListComponentProps {
     items: Item[];
     deleteItem: any;
+    editItem: any;
 }
 
-export const ListComponent = ({items, deleteItem } : ListComponentProps) => {
+export const ListComponent = ({ items, deleteItem, editItem } : ListComponentProps) => {
+   
     return (
         <div className="list">
             <Typography variant="h5">The List</Typography>
@@ -19,6 +21,7 @@ export const ListComponent = ({items, deleteItem } : ListComponentProps) => {
                             index={index}
                             item={item} 
                             deleteItem={deleteItem}
+                            editItem={editItem}
                         />
                     </li>
                 ))}

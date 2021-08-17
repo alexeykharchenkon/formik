@@ -9,6 +9,7 @@ import { Item } from '@common/types';
 
 const mapStateToProps = (state: any) => ({
       items: state.itemsState.items,
+      activeItem: state.itemsState.activeItem
 });
 const mapDispatchToProps = (dispatch: any) => ({
       itemsActions: bindActionCreators(itemsActions, dispatch),
@@ -16,16 +17,17 @@ const mapDispatchToProps = (dispatch: any) => ({
 
 interface AppProps {
   items: Item[];
+  activeItem: Item;
   itemsActions: any;
 }
 
-const App = ({items, itemsActions}: AppProps) => {
-  const { addItem, deleteItem } = itemsActions;
+const App = ({items, activeItem, itemsActions}: AppProps) => {
+  const { addItem, deleteItem, editItem, updateItem } = itemsActions;
 
   return (
     <div className="app">
-      <ListComponent items={items} deleteItem={deleteItem}/>
-      <FormComponent addItem={addItem}/>
+      <ListComponent items={items} deleteItem={deleteItem} editItem={editItem} />
+      <FormComponent addItem={addItem} updateItem={updateItem} activeItem={activeItem}/>
     </div>
   );
 }
